@@ -205,6 +205,7 @@ public class JediEmulator extends DataStreamIteratingEmulator {
       switch (i) {
         case 0: //Icon name/title
         case 2: //Title
+        case 7: //neoe: I didnot find the doc
           String name = args.getStringAt(1);
           if (name != null) {
             myTerminal.setWindowTitle(name);

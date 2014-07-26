@@ -37,7 +37,7 @@ public class JediTermWidget extends JPanel implements TerminalSession, TerminalW
   private TerminalActionProvider myNextActionProvider;
 
   public JediTermWidget(@NotNull SettingsProvider settingsProvider) {
-    this(80, 24, settingsProvider);
+    this(160, 40, settingsProvider); //larger
   }
 
   public JediTermWidget(Dimension dimension, SettingsProvider settingsProvider) {

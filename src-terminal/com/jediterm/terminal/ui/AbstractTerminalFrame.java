@@ -4,7 +4,7 @@ import com.google.common.base.Predicate;
 import com.jediterm.terminal.RequestOrigin;
 import com.jediterm.terminal.TtyConnector;
 import com.jediterm.terminal.debug.BufferPanel;
-import com.jediterm.terminal.ui.settings.DefaultSettingsProvider;
+
 
 import com.jediterm.terminal.ui.settings.DefaultTabbedSettingsProvider;
 import org.apache.log4j.Logger;
@@ -160,7 +160,8 @@ public abstract class AbstractTerminalFrame {
 
       @Override
       public void onTitleChanged(String title) {
-        frame.setTitle(myTerminal.getCurrentSession().getSessionName());
+        //frame.setTitle(myTerminal.getCurrentSession().getSessionName());
+          frame.setTitle(title);
       }
     });
 

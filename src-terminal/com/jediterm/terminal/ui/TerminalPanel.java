@@ -315,10 +315,10 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Clipbo
   }
 
   void setUpClipboard() {
-    myClipboard = Toolkit.getDefaultToolkit().getSystemSelection();
-    if (myClipboard == null) {
-      myClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-    }
+    myClipboard = Toolkit.getDefaultToolkit().getSystemClipboard(); //system wide
+//    if (myClipboard == null) {
+//      myClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+//    }
   }
 
   protected void copySelection(final Point selectionStart, final Point selectionEnd) {
@@ -340,7 +340,8 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Clipbo
   }
 
   protected void setCopyContents(StringSelection selection) {
-    myClipboard.setContents(selection, this);
+    //myClipboard.setContents(selection, this);
+      myClipboard.setContents(selection, null); //system wide
   }
 
   protected void pasteSelection() {
@@ -1367,7 +1368,7 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Clipbo
   }
 
   // "unselect" is needed to handle Ctrl+C copy shortcut collision with ^C signal shortcut
-  private boolean handleCopy(boolean unselect) {
+    private boolean handleCopy(boolean unselect) {
     if (mySelection != null) {
       Pair<Point, Point> points = mySelection.pointsForRun(myTermSize.width);
       copySelection(points.first, points.second);
