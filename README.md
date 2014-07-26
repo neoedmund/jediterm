@@ -1,3 +1,20 @@
+JediTerm 2.0
+------------
+
+This list of features planned for 2.0 version:
+
+* Refactoring of tabs
+* Memory consumption optimization - don't store bitmaps in memory, paint from text
+* Performance optimization - scrolling of a large text should be fast
+* Double-width symbols support - get rid of back-buffer
+
+To achieve these goals a huge rework is necessary. It can break compatibility and can be unstable in the
+beginning, so the changes are made in branch.
+
+While master is perserved as stable and will get only bug-fix updates.
+
+
+
 JediTerm
 ========
 
@@ -22,14 +39,15 @@ Features
 --------
 
 * Ssh using JSch from jcraft.org 
-* Local terminal using Pty4J
-* Xterm emulation
+* Local terminal for Unix, Mac and Windows using Pty4J
+* Xterm emulation - passes most of tests from vttest 
 * Xterm 256 colours
 * Scrolling
 * Copy/Paste
 * Mouse support
 * Terminal resizing from client or server side
-* Terminal tabs
+* Terminal tabs 
+
 
 
 Links

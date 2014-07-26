@@ -3,13 +3,17 @@ package com.jediterm.terminal;
 import java.util.Arrays;
 
 import com.google.common.base.Ascii;
-import com.jediterm.terminal.display.CharBuffer;
+import com.jediterm.terminal.model.CharBuffer;
 import com.jediterm.terminal.emulator.charset.CharacterSets;
 
 public class CharacterUtils {
 
   public static final int ESC = Ascii.ESC;
   public static final int DEL = Ascii.DEL;
+
+  // NUL can only be at the end of the line
+  public static final char NUL_CHAR = 0x0;
+  public static final char EMPTY_CHAR = ' ';
 
   private CharacterUtils() {
   }
@@ -49,7 +53,7 @@ public class CharacterUtils {
 
   public static CharacterType appendChar(final StringBuilder sb, final CharacterType last, final char c) {
     if (c <= 0x1F) {
-      sb.append(' ');
+      sb.append(EMPTY_CHAR);
       sb.append(NONPRINTING_NAMES[c]);
       return CharacterType.NONPRINTING;
     }
@@ -58,7 +62,7 @@ public class CharacterUtils {
       return CharacterType.NONPRINTING;
     }
     else if (c > 0x1F && c <= 0x7E) {
-      if (last != CharacterType.PRINTING) sb.append(' ');
+      if (last != CharacterType.PRINTING) sb.append(EMPTY_CHAR);
       sb.append(c);
       return CharacterType.PRINTING;
     }
@@ -253,7 +257,7 @@ public class CharacterUtils {
   public static CharBuffer heavyDecCompatibleBuffer(CharBuffer buf) {
     char[] c = Arrays.copyOfRange(buf.getBuf(), 0, buf.getBuf().length);
     for(int i = 0; i < c.length; i++) {
-      c[i] = CharacterSets.getHeavyDecSpecialChar(c[i]);
+      c[i] = CharacterSets.getHeavyDecBoxChar(c[i]);
     }
     return new CharBuffer(c, buf.getStart(), buf.getLength());
   }

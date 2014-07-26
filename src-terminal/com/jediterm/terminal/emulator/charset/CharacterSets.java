@@ -1,5 +1,7 @@
 package com.jediterm.terminal.emulator.charset;
 
+import com.jediterm.terminal.CharacterUtils;
+
 /**
  * Provides the (graphical) character sets.
  */
@@ -132,7 +134,10 @@ public final class CharacterSets {
     {' ', null}, //
   };
 
-  public static boolean isDecSpecialChar(char c) {
+  public static boolean isDecBoxChar(char c) {
+    if (c < '\u2500' || c >= '\u2580') { // fast path
+      return false;
+    }
     for (Object[] o : DEC_SPECIAL_CHARS) {
       if (c == (Character) o[0]) {
         return true;
@@ -141,7 +146,10 @@ public final class CharacterSets {
     return false;
   }
   
-  public static char getHeavyDecSpecialChar(char c) {
+  public static char getHeavyDecBoxChar(char c) {
+    if (c < '\u2500' || c >= '\u2580') { // fast path
+      return c;
+    }
     for (Object[] o : DEC_SPECIAL_CHARS) {
       if (c == (Character) o[0]) {
         return o[1] != null ? (Character) o[1] : c;
@@ -176,7 +184,7 @@ public final class CharacterSets {
       return (char)ch;
     }
 
-    return ' ';
+    return CharacterUtils.NUL_CHAR;
   }
 
   /**

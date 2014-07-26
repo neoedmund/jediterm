@@ -2,7 +2,6 @@ package com.jediterm.terminal.ui.settings;
 
 import com.jediterm.terminal.TerminalColor;
 import com.jediterm.terminal.TextStyle;
-import com.jediterm.terminal.TtyConnector;
 import com.jediterm.terminal.emulator.ColorPalette;
 import com.jediterm.terminal.ui.UIUtil;
 
@@ -107,6 +106,11 @@ public class DefaultSettingsProvider implements SettingsProvider {
   }
 
   @Override
+  public int maxRefreshRate() {
+    return 50;
+  }
+
+  @Override
   public boolean audibleBell() {
     return true;
   }
@@ -131,4 +135,8 @@ public class DefaultSettingsProvider implements SettingsProvider {
     return true;
   }
 
+  @Override
+  public boolean forceActionOnMouseReporting() {
+    return false;
+  }
 }

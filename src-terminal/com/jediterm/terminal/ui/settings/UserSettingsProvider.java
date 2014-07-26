@@ -28,6 +28,8 @@ public interface UserSettingsProvider {
 
   boolean useAntialiasing();
 
+  int maxRefreshRate();
+
   boolean audibleBell();
 
   boolean enableMouseReporting();
@@ -37,4 +39,6 @@ public interface UserSettingsProvider {
   boolean scrollToBottomOnTyping();
 
   boolean DECCompatibilityMode();
+
+  boolean forceActionOnMouseReporting();
 }
