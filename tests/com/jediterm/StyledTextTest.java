@@ -63,46 +63,46 @@ public class StyledTextTest extends TestCase {
 //    assertEquals(colors, backBuffer2.getStyleLines());
   }
 
-  public void test24BitForegroundColourParsing() throws IOException {
-    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "38;2;0;128;0mHello");
-    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 128, 0), style.getForeground());
-  }
-
-  public void test24BitBackgroundColourParsing() throws IOException {
-    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "48;2;0;128;0mHello");
-    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 128, 0), style.getBackground());
-  }
-
-  public void test24BitCombinedColourParsing() throws IOException {
-    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "0;38;2;0;128;0;48;2;0;255;0;1mHello");
-    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 128, 0), style.getForeground());
-    assertEquals(new TerminalColor(0, 255, 0), style.getBackground());
-    assertTrue(style.hasOption(TextStyle.Option.BOLD));
-  }
-
-  public void testIndexedForegroundColourParsing() throws IOException {
-    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "38;5;46mHello");
-    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 255, 0), style.getForeground());
-  }
-
-  public void testIndexedBackgroundColourParsing() throws IOException {
-    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "48;5;46mHello");
-    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 255, 0), style.getBackground());
-  }
-
-  public void testIndexedCombinedColourParsing() throws IOException {
-    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "0;38;5;46;48;5;196;1mHello");
-    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 255, 0), style.getForeground());
-    assertEquals(new TerminalColor(255, 0, 0), style.getBackground());
-    assertTrue(style.hasOption(TextStyle.Option.BOLD));
-  }
-
+//  public void test24BitForegroundColourParsing() throws IOException {
+//    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "38;2;0;128;0mHello");
+//    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 128, 0), style.getForeground());
+//  }
+//
+//  public void test24BitBackgroundColourParsing() throws IOException {
+//    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "48;2;0;128;0mHello");
+//    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 128, 0), style.getBackground());
+//  }
+//
+//  public void test24BitCombinedColourParsing() throws IOException {
+//    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "0;38;2;0;128;0;48;2;0;255;0;1mHello");
+//    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 128, 0), style.getForeground());
+//    assertEquals(new TerminalColor(0, 255, 0), style.getBackground());
+//    assertTrue(style.hasOption(TextStyle.Option.BOLD));
+//  }
+//
+//  public void testIndexedForegroundColourParsing() throws IOException {
+//    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "38;5;46mHello");
+//    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 255, 0), style.getForeground());
+//  }
+//
+//  public void testIndexedBackgroundColourParsing() throws IOException {
+//    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "48;5;46mHello");
+//    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 255, 0), style.getBackground());
+//  }
+//
+//  public void testIndexedCombinedColourParsing() throws IOException {
+//    TerminalTextBuffer terminalTextBuffer = getBufferFor(12, 1, CSI + "0;38;5;46;48;5;196;1mHello");
+//    TextStyle style = terminalTextBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 255, 0), style.getForeground());
+//    assertEquals(new TerminalColor(255, 0, 0), style.getBackground());
+//    assertTrue(style.hasOption(TextStyle.Option.BOLD));
+//  }
+//
   private TerminalTextBuffer getBufferFor(int width, int height, String content) throws IOException {
     StyleState state = new StyleState();
     TerminalTextBuffer terminalTextBuffer = new TerminalTextBuffer(width, height, state);
@@ -123,63 +123,63 @@ public class StyledTextTest extends TestCase {
     public void sendString(String string) {}
   }
 
-  public void test24BitForegroundColourParsing() throws IOException {
-    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "38;2;0;128;0mHello");
-    TextStyle style = backBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 128, 0), style.getForeground());
-  }
+//  public void test24BitForegroundColourParsing() throws IOException {
+//    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "38;2;0;128;0mHello");
+//    TextStyle style = backBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 128, 0), style.getForeground());
+//  }
+//
+//  public void test24BitBackgroundColourParsing() throws IOException {
+//    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "48;2;0;128;0mHello");
+//    TextStyle style = backBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 128, 0), style.getBackground());
+//  }
+//
+//  public void test24BitCombinedColourParsing() throws IOException {
+//    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "0;38;2;0;128;0;48;2;0;255;0;1mHello");
+//    TextStyle style = backBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 128, 0), style.getForeground());
+//    assertEquals(new TerminalColor(0, 255, 0), style.getBackground());
+//    assertTrue(style.hasOption(TextStyle.Option.BOLD));
+//  }
+//
+//  public void testIndexedForegroundColourParsing() throws IOException {
+//    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "38;5;46mHello");
+//    TextStyle style = backBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 255, 0), style.getForeground());
+//  }
+//
+//  public void testIndexedBackgroundColourParsing() throws IOException {
+//    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "48;5;46mHello");
+//    TextStyle style = backBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 255, 0), style.getBackground());
+//  }
+//
+//  public void testIndexedCombinedColourParsing() throws IOException {
+//    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "0;38;5;46;48;5;196;1mHello");
+//    TextStyle style = backBuffer.getStyleAt(0, 0);
+//    assertEquals(new TerminalColor(0, 255, 0), style.getForeground());
+//    assertEquals(new TerminalColor(255, 0, 0), style.getBackground());
+//    assertTrue(style.hasOption(TextStyle.Option.BOLD));
+//  }
+//
+//  private BackBuffer getBufferFor(int width, int height, String content) throws IOException {
+//    StyleState state = new StyleState();
+//    BackBuffer backBuffer = new BackBuffer(width, height, state);
+//    JediTerminal terminal = new JediTerminal(new BackBufferDisplay(backBuffer), backBuffer, state);
+//    Emulator emulator = new JediEmulator(new ArrayTerminalDataStream(content.toCharArray()),
+//                                         new DevNullTerminalOutputStream(), terminal);
+//    while (emulator.hasNext()) {
+//      emulator.next();
+//    }
+//    return backBuffer;
+//  }
 
-  public void test24BitBackgroundColourParsing() throws IOException {
-    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "48;2;0;128;0mHello");
-    TextStyle style = backBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 128, 0), style.getBackground());
-  }
-
-  public void test24BitCombinedColourParsing() throws IOException {
-    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "0;38;2;0;128;0;48;2;0;255;0;1mHello");
-    TextStyle style = backBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 128, 0), style.getForeground());
-    assertEquals(new TerminalColor(0, 255, 0), style.getBackground());
-    assertTrue(style.hasOption(TextStyle.Option.BOLD));
-  }
-
-  public void testIndexedForegroundColourParsing() throws IOException {
-    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "38;5;46mHello");
-    TextStyle style = backBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 255, 0), style.getForeground());
-  }
-
-  public void testIndexedBackgroundColourParsing() throws IOException {
-    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "48;5;46mHello");
-    TextStyle style = backBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 255, 0), style.getBackground());
-  }
-
-  public void testIndexedCombinedColourParsing() throws IOException {
-    BackBuffer backBuffer = getBufferFor(12, 1, CSI + "0;38;5;46;48;5;196;1mHello");
-    TextStyle style = backBuffer.getStyleAt(0, 0);
-    assertEquals(new TerminalColor(0, 255, 0), style.getForeground());
-    assertEquals(new TerminalColor(255, 0, 0), style.getBackground());
-    assertTrue(style.hasOption(TextStyle.Option.BOLD));
-  }
-
-  private BackBuffer getBufferFor(int width, int height, String content) throws IOException {
-    StyleState state = new StyleState();
-    BackBuffer backBuffer = new BackBuffer(width, height, state);
-    JediTerminal terminal = new JediTerminal(new BackBufferDisplay(backBuffer), backBuffer, state);
-    Emulator emulator = new JediEmulator(new ArrayTerminalDataStream(content.toCharArray()),
-                                         new DevNullTerminalOutputStream(), terminal);
-    while (emulator.hasNext()) {
-      emulator.next();
-    }
-    return backBuffer;
-  }
-
-  private static class DevNullTerminalOutputStream implements TerminalOutputStream {
-    @Override
-    public void sendBytes(byte[] response) {}
-
-    @Override
-    public void sendString(String string) {}
-  }
+//  private static class DevNullTerminalOutputStream implements TerminalOutputStream {
+//    @Override
+//    public void sendBytes(byte[] response) {}
+//
+//    @Override
+//    public void sendString(String string) {}
+//  }
 }

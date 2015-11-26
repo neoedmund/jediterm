@@ -50,7 +50,7 @@ public class DefaultSettingsProvider implements SettingsProvider {
   public Font getTerminalFont() {
     String fontName;
     if (UIUtil.isWindows) {
-      fontName = "Consolas";
+      fontName = "Simsun";
     } else if (UIUtil.isMac) {
       fontName = "Menlo";
     } else {
