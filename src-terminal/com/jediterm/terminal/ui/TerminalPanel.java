@@ -502,8 +502,8 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Termin
 
 		myDescent = fo.getDescent();
 		myCharSize.width = fo.charWidth('W');
-		myCharSize.height = fo.getHeight() ;//+ (int) (lineSpace * 2);
-		//myDescent += lineSpace;
+		myCharSize.height = fo.getHeight();// + (int) (lineSpace * 2);
+		// myDescent += lineSpace;
 
 		myMonospaced = isMonospaced(fo);
 		if (!myMonospaced) {
@@ -908,7 +908,7 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Termin
 	 * as one block for monospaced fonts.
 	 */
 	private void drawChars(int x, int y, CharBuffer buf, TextStyle style, Graphics2D gfx) {
-		int newBlockLen = buf.length();//0
+		int newBlockLen = buf.length();// 0
 		int offset = 0;
 		int drawCharsOffset = 0;
 
@@ -931,14 +931,15 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Termin
 			// }
 			gfx.setFont(font);
 			int descent = gfx.getFontMetrics(font).getDescent();
-			int baseLine = (y + 1) * myCharSize.height - descent;
+			int baseLine = (y + 1) * myCharSize.height - descent - 3;
 			int xCoord = (x + drawCharsOffset) * myCharSize.width;
 			int textLength = CharacterUtils.getTextLength(buf.getBuf(), buf.getStart() + offset, newBlockLen);
 
 			int yCoord = y * myCharSize.height;
 
-//			gfx.setClip(xCoord, yCoord, Math.min(textLength * myCharSize.width, getWidth() - xCoord),
-//					Math.min(myCharSize.height, getHeight() - yCoord));
+			// gfx.setClip(xCoord, yCoord, Math.min(textLength *
+			// myCharSize.width, getWidth() - xCoord),
+			// Math.min(myCharSize.height, getHeight() - yCoord));
 
 			gfx.setColor(getPalette().getColor(myStyleState.getForeground(style.getForegroundForRun())));
 
@@ -949,7 +950,7 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Termin
 
 			newBlockLen = 1;
 		}
-//		gfx.setClip(null);
+		// gfx.setClip(null);
 	}
 
 	protected Font getFontToDisplay(char c, TextStyle style) {
