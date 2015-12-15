@@ -943,7 +943,20 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Termin
 
 			gfx.setColor(getPalette().getColor(myStyleState.getForeground(style.getForegroundForRun())));
 
-			gfx.drawChars(renderingBuffer.getBuf(), buf.getStart() + offset, newBlockLen, xCoord, baseLine);
+			{// fixbug: bold chars shown incomplete
+				String s = new String(renderingBuffer.getBuf(), buf.getStart() + offset, newBlockLen);
+				int maxWidth = textLength * myCharSize.width;
+				int actualWidth = gfx.getFontMetrics().stringWidth(s);
+				if (actualWidth > maxWidth) { // let's slim
+					Graphics2D g2 = (Graphics2D) gfx.create();
+					g2.translate(xCoord, baseLine);
+					g2.scale(((double) maxWidth) / actualWidth, 1);
+					g2.drawString(s, 0, 0);
+					g2.dispose();
+				} else {
+					gfx.drawChars(renderingBuffer.getBuf(), buf.getStart() + offset, newBlockLen, xCoord, baseLine);
+				}
+			}
 
 			drawCharsOffset += textLength;
 			offset += newBlockLen;
