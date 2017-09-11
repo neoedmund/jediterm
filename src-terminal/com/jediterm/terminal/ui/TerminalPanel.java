@@ -418,7 +418,7 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Termin
 
 	protected String getClipboardContent() throws IOException, UnsupportedFlavorException {
 		try {
-			return (String) myClipboard.getData(DataFlavor.stringFlavor);
+			return Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor).toString();
 		} catch (Exception e) {
 			LOG.info(e);
 			return null;
