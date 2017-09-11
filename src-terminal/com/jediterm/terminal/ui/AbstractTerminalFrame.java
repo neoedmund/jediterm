@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import com.jediterm.terminal.RequestOrigin;
 import com.jediterm.terminal.TtyConnector;
 import com.jediterm.terminal.debug.BufferPanel;
+import com.jediterm.terminal.debug.DebugBufferType;
 import com.jediterm.terminal.model.SelectionUtil;
 import com.jediterm.terminal.ui.settings.DefaultTabbedSettingsProvider;
 import com.jediterm.terminal.util.Pair;
@@ -12,204 +13,212 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 
-
 public abstract class AbstractTerminalFrame {
-  public static final Logger LOG = Logger.getLogger(AbstractTerminalFrame.class);
+	public static final Logger LOG = Logger.getLogger(AbstractTerminalFrame.class);
 
-  private JFrame myBufferFrame;
+	private JFrame myBufferFrame;
 
-  private TerminalWidget myTerminal;
-  
-  private AbstractAction myOpenAction = new AbstractAction("New Session") {
-    public void actionPerformed(final ActionEvent e) {
-      openSession(myTerminal);
-    }
-  };
+	private TerminalWidget myTerminal;
 
-  private AbstractAction myShowBuffersAction = new AbstractAction("Show buffers") {
-    public void actionPerformed(final ActionEvent e) {
-      if (myBufferFrame == null) {
-        showBuffers();
-      }
-    }
-  };
+	private AbstractAction myOpenAction = new AbstractAction("New Session") {
+		public void actionPerformed(final ActionEvent e) {
+			openSession(myTerminal);
+		}
+	};
 
-  private AbstractAction myDumpDimension = new AbstractAction("Dump terminal dimension") {
-    public void actionPerformed(final ActionEvent e) {
-      LOG.info(myTerminal.getTerminalDisplay().getColumnCount() +
-          "x" + myTerminal.getTerminalDisplay().getRowCount());
-    }
-  };
+	private AbstractAction myShowBuffersAction = new AbstractAction("Show buffers") {
+		public void actionPerformed(final ActionEvent e) {
+			if (myBufferFrame == null) {
+				showBuffers();
+			}
+		}
+	};
 
-  private AbstractAction myDumpSelection = new AbstractAction("Dump selection") {
-    public void actionPerformed(final ActionEvent e) {
-      Pair<Point, Point> points = myTerminal.getTerminalDisplay()
-          .getSelection().pointsForRun(myTerminal.getTerminalDisplay().getColumnCount());
-      LOG.info(myTerminal.getTerminalDisplay().getSelection() + " : '"
-          + SelectionUtil.getSelectionText(points.first, points.second, myTerminal.getCurrentSession().getBackBuffer()) + "'");
-    }
-  };
+	private AbstractAction myDumpDimension = new AbstractAction("Dump terminal dimension") {
+		public void actionPerformed(final ActionEvent e) {
+			LOG.info(myTerminal.getTerminalDisplay().getColumnCount() + "x"
+					+ myTerminal.getTerminalDisplay().getRowCount());
+		}
+	};
 
-  private AbstractAction myDumpCursorPosition = new AbstractAction("Dump cursor position") {
-    public void actionPerformed(final ActionEvent e) {
-      LOG.info(myTerminal.getCurrentSession().getTerminal().getCursorX() +
-          "x" + myTerminal.getCurrentSession().getTerminal().getCursorY());
-    }
-  };
+	private AbstractAction myDumpSelection = new AbstractAction("Dump selection") {
+		public void actionPerformed(final ActionEvent e) {
+			Pair<Point, Point> points = myTerminal.getTerminalDisplay().getSelection()
+					.pointsForRun(myTerminal.getTerminalDisplay().getColumnCount());
+			LOG.info(myTerminal.getTerminalDisplay().getSelection() + " : '" + SelectionUtil.getSelectionText(
+					points.first, points.second, myTerminal.getCurrentSession().getBackBuffer()) + "'");
+		}
+	};
 
-  private AbstractAction myCursor0x0 = new AbstractAction("1x1") {
-    public void actionPerformed(final ActionEvent e) {
-         myTerminal.getCurrentSession().getTerminal().cursorPosition(1, 1);
-    }
-  };
+	private AbstractAction myCopyBuffer = new AbstractAction("Copy buffer") {
+		public void actionPerformed(final ActionEvent e) {
+			String s = myTerminal.getCurrentSession().getBufferText(DebugBufferType.Back);
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(s), null);
+		}
+	};
 
-  private AbstractAction myCursor10x10 = new AbstractAction("10x10") {
-    public void actionPerformed(final ActionEvent e) {
-         myTerminal.getCurrentSession().getTerminal().cursorPosition(10, 10);
-    }
-  };
+	private AbstractAction myDumpCursorPosition = new AbstractAction("Dump cursor position") {
+		public void actionPerformed(final ActionEvent e) {
+			LOG.info(myTerminal.getCurrentSession().getTerminal().getCursorX() + "x"
+					+ myTerminal.getCurrentSession().getTerminal().getCursorY());
+		}
+	};
 
-  private AbstractAction myCursor80x24 = new AbstractAction("80x24") {
-    public void actionPerformed(final ActionEvent e) {
-         myTerminal.getCurrentSession().getTerminal().cursorPosition(80, 24);
-    }
-  };
+	private AbstractAction myCursor0x0 = new AbstractAction("1x1") {
+		public void actionPerformed(final ActionEvent e) {
+			myTerminal.getCurrentSession().getTerminal().cursorPosition(1, 1);
+		}
+	};
 
-  private JMenuBar getJMenuBar() {
-    final JMenuBar mb = new JMenuBar();
-    final JMenu m = new JMenu("File");
+	private AbstractAction myCursor10x10 = new AbstractAction("10x10") {
+		public void actionPerformed(final ActionEvent e) {
+			myTerminal.getCurrentSession().getTerminal().cursorPosition(10, 10);
+		}
+	};
 
-    m.add(myOpenAction);
-    mb.add(m);
-    final JMenu dm = new JMenu("Debug");
+	private AbstractAction myCursor80x24 = new AbstractAction("80x24") {
+		public void actionPerformed(final ActionEvent e) {
+			myTerminal.getCurrentSession().getTerminal().cursorPosition(80, 24);
+		}
+	};
 
-    JMenu logLevel = new JMenu("Set log level ...");
-    Level[] levels = new Level[] {Level.ALL, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL, Level.OFF};
-    for(final Level l : levels) {
-      logLevel.add(new AbstractAction(l.toString()) {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-          Logger.getRootLogger().setLevel(l);
-        }
-      });
-    }
-    dm.add(logLevel);
-    dm.addSeparator();
+	private JMenuBar getJMenuBar() {
+		final JMenuBar mb = new JMenuBar();
+		final JMenu m = new JMenu("File");
 
-    dm.add(myShowBuffersAction);
-    dm.addSeparator();
-    dm.add(myDumpDimension);
-    dm.add(myDumpSelection);
-    dm.add(myDumpCursorPosition);
-    
-    JMenu cursorPosition = new JMenu("Set cursor position ...");
-    cursorPosition.add(myCursor0x0);
-    cursorPosition.add(myCursor10x10);
-    cursorPosition.add(myCursor80x24);
-    dm.add(cursorPosition);
-    mb.add(dm);
+		m.add(myOpenAction);
+		mb.add(m);
+		final JMenu dm = new JMenu("Debug");
 
-    return mb;
-  }
+		JMenu logLevel = new JMenu("Set log level ...");
+		Level[] levels = new Level[] { Level.ALL, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL,
+				Level.OFF };
+		for (final Level l : levels) {
+			logLevel.add(new AbstractAction(l.toString()) {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Logger.getRootLogger().setLevel(l);
+				}
+			});
+		}
+		dm.add(logLevel);
+		dm.addSeparator();
+		dm.add(myCopyBuffer);
+		dm.add(myShowBuffersAction);
+		dm.addSeparator();
+		dm.add(myDumpDimension);
+		dm.add(myDumpSelection);
+		dm.add(myDumpCursorPosition);
 
-  private void openSession(TerminalWidget terminal) {
-    if (terminal.canOpenSession()) {
-      openSession(terminal, createTtyConnector());
-    }
-  }
+		JMenu cursorPosition = new JMenu("Set cursor position ...");
+		cursorPosition.add(myCursor0x0);
+		cursorPosition.add(myCursor10x10);
+		cursorPosition.add(myCursor80x24);
+		dm.add(cursorPosition);
+		mb.add(dm);
 
-  public void openSession(TerminalWidget terminal, TtyConnector ttyConnector) {
-    TerminalSession session = terminal.createTerminalSession(ttyConnector);
-    session.start();
-  }
+		return mb;
+	}
 
-  public abstract TtyConnector createTtyConnector();
+	private void openSession(TerminalWidget terminal) {
+		if (terminal.canOpenSession()) {
+			openSession(terminal, createTtyConnector());
+		}
+	}
 
-  protected AbstractTerminalFrame() {
-    myTerminal = new TabbedTerminalWidget(new DefaultTabbedSettingsProvider(), new Predicate<TerminalWidget>() {
-      @Override
-      public boolean apply(TerminalWidget terminalWidget) {
-        openSession(terminalWidget);
-        return true;
-      }
-    });
+	public void openSession(TerminalWidget terminal, TtyConnector ttyConnector) {
+		TerminalSession session = terminal.createTerminalSession(ttyConnector);
+		session.start();
+	}
 
-    final JFrame frame = new JFrame("JediTerm");
+	public abstract TtyConnector createTtyConnector();
 
-    frame.addWindowListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(final WindowEvent e) {
-        System.exit(0);
-      }
-    });
+	protected AbstractTerminalFrame() {
+		myTerminal = new TabbedTerminalWidget(new DefaultTabbedSettingsProvider(), new Predicate<TerminalWidget>() {
+			@Override
+			public boolean apply(TerminalWidget terminalWidget) {
+				openSession(terminalWidget);
+				return true;
+			}
+		});
 
-    final JMenuBar mb = getJMenuBar();
-    frame.setJMenuBar(mb);
-    sizeFrameForTerm(frame);
-    frame.getContentPane().add("Center", myTerminal.getComponent());
+		final JFrame frame = new JFrame("JediTerm");
 
-    frame.pack();
-    frame.setVisible(true);
+		frame.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(final WindowEvent e) {
+				System.exit(0);
+			}
+		});
 
-    frame.setResizable(true);
+		final JMenuBar mb = getJMenuBar();
+		frame.setJMenuBar(mb);
+		sizeFrameForTerm(frame);
+		frame.getContentPane().add("Center", myTerminal.getComponent());
 
-    myTerminal.setTerminalPanelListener(new TerminalPanelListener() {
-      public void onPanelResize(final Dimension pixelDimension, final RequestOrigin origin) {
-        if (origin == RequestOrigin.Remote) {
-          sizeFrameForTerm(frame);
-        }
-        frame.pack();
-      }
+		frame.pack();
+		frame.setVisible(true);
 
-      @Override
-      public void onSessionChanged(final TerminalSession currentSession) {
-        frame.setTitle(currentSession.getSessionName());
-      }
+		frame.setResizable(true);
 
-      @Override
-      public void onTitleChanged(String title) {
-        //frame.setTitle(myTerminal.getCurrentSession().getSessionName());
-          frame.setTitle(title);
-      }
-    });
+		myTerminal.setTerminalPanelListener(new TerminalPanelListener() {
+			public void onPanelResize(final Dimension pixelDimension, final RequestOrigin origin) {
+				if (origin == RequestOrigin.Remote) {
+					sizeFrameForTerm(frame);
+				}
+				frame.pack();
+			}
 
-    openSession(myTerminal);
-  }
+			@Override
+			public void onSessionChanged(final TerminalSession currentSession) {
+				frame.setTitle(currentSession.getSessionName());
+			}
 
-  private void sizeFrameForTerm(final JFrame frame) {
-    SwingUtilities.invokeLater(new Runnable() {
-      @Override
-      public void run() {
-        Dimension d = myTerminal.getPreferredSize();
+			@Override
+			public void onTitleChanged(String title) {
+				// frame.setTitle(myTerminal.getCurrentSession().getSessionName());
+				frame.setTitle(title);
+			}
+		});
 
-        d.width += frame.getWidth() - frame.getContentPane().getWidth();
-        d.height += frame.getHeight() - frame.getContentPane().getHeight();
-        frame.setSize(d);
-      }
-    });
-  }
+		openSession(myTerminal);
+	}
 
-  private void showBuffers() {
-    SwingUtilities.invokeLater(new Runnable() {
-      public void run() {
-        myBufferFrame = new JFrame("buffers");
-        final JPanel panel = new BufferPanel(myTerminal.getCurrentSession());
+	private void sizeFrameForTerm(final JFrame frame) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				Dimension d = myTerminal.getPreferredSize();
 
-        myBufferFrame.getContentPane().add(panel);
-        myBufferFrame.pack();
-        myBufferFrame.setVisible(true);
-        myBufferFrame.setSize(800, 600);
+				d.width += frame.getWidth() - frame.getContentPane().getWidth();
+				d.height += frame.getHeight() - frame.getContentPane().getHeight();
+				frame.setSize(d);
+			}
+		});
+	}
 
-        myBufferFrame.addWindowListener(new WindowAdapter() {
-          @Override
-          public void windowClosing(final WindowEvent e) {
-            myBufferFrame = null;
-          }
-        });
-      }
-    });
-  }
+	private void showBuffers() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				myBufferFrame = new JFrame("buffers");
+				final JPanel panel = new BufferPanel(myTerminal.getCurrentSession());
+
+				myBufferFrame.getContentPane().add(panel);
+				myBufferFrame.pack();
+				myBufferFrame.setVisible(true);
+				myBufferFrame.setSize(800, 600);
+
+				myBufferFrame.addWindowListener(new WindowAdapter() {
+					@Override
+					public void windowClosing(final WindowEvent e) {
+						myBufferFrame = null;
+					}
+				});
+			}
+		});
+	}
 
 }
