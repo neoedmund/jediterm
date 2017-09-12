@@ -6,6 +6,7 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Lists;
 import com.jediterm.terminal.*;
 import com.jediterm.terminal.TextStyle.Option;
+import com.jediterm.terminal.debug.DebugBufferType;
 import com.jediterm.terminal.emulator.ColorPalette;
 import com.jediterm.terminal.emulator.charset.CharacterSets;
 import com.jediterm.terminal.emulator.mouse.MouseMode;
@@ -1089,7 +1090,15 @@ public class TerminalPanel extends JComponent implements TerminalDisplay, Termin
 					public Boolean get() {
 						return mySelection != null;
 					}
-				}), new TerminalAction("Paste", mySettingsProvider.getPasteKeyStrokes(), new Predicate<KeyEvent>() {
+				}),new TerminalAction("Copy Buffer", mySettingsProvider.getCopyKeyStrokes(), new Predicate<KeyEvent>() {
+					@Override
+					public boolean apply(KeyEvent input) {
+						
+						String s = myTerminalTextBuffer.getScreenLines();
+						Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(s), null);
+						return true;
+					}
+				}),  new TerminalAction("Paste", mySettingsProvider.getPasteKeyStrokes(), new Predicate<KeyEvent>() {
 					@Override
 					public boolean apply(KeyEvent input) {
 						handlePaste();
